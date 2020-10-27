@@ -12,7 +12,7 @@ import {
 
 } from 'react-native';
 import Body from '../../components/Body';
-
+// import { useDarkMode } from 'react-native-dynamic'
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -23,7 +23,8 @@ function Home({ navigation }) {
     const [data, setData] = useState([{ title: 'سلام ', image: 'nasdas' }])
     const [isLoading, setLoading] = useState(true)
     const [isFocus, setFocus] = useState(true)
-
+    // const [isDarkMode,setDarkMode] = useDarkMode()
+    // const isDarkMode = useDarkMode()
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
             getDataList().then((res) => {
@@ -58,13 +59,13 @@ function Home({ navigation }) {
 
 
     return (
-        <Body style={{ flex: 1, borderWidth: 1 }}>
+        <Body style={{ flex: 1, borderWidth: 1}}>
                 {
                     isFocus ? <ScrollView>
 
                         {
                             data.map((i, j) => {
-                                return <BrowseResult title={i.title} picture={url + i.image} />
+                                return <BrowseResult title={i.title} picture={url + i.image} navigation={navigation} />
                             })
                         }
                     </ScrollView> :

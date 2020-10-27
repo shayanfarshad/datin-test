@@ -7,23 +7,28 @@ import {
     Animated,
     StyleSheet,
     TouchableOpacity as TO,
-
+    Image,
+    Dimensions
 } from 'react-native';
 import Body from '../../components/Body';
 
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useTheme } from '@react-navigation/native';
 
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 
-function Detail({ navigation }) {
+function Detail({ navigation, route }) {
 
     const [isFocus, setFocus] = useState(false)
+    // const [title , setTitle] = useState(navigation.)
+    // const [img , setImg] = useState()
+    const { title, img } = route.params;
     React.useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
             setFocus(true)
+            console.log('title', title)
         });
         return unsubscribe;
     }, [navigation]);
@@ -35,8 +40,8 @@ function Detail({ navigation }) {
     }, [navigation]);
 
 
-
-
+    const width = Dimensions.get('window').width;
+    const { colors } = useTheme();
 
     // useFocusEffect(
     //     React.useCallback(() => {
@@ -50,8 +55,11 @@ function Detail({ navigation }) {
 
 
     return (
-        <Body style={{ flex: 1 }}>
-            <Text>salam</Text>
+        <Body style={{ flex: 1, padding: '5%' }}>
+            <Text style={{ marginBottom: 20, color: colors.text }}>{title}</Text>
+            <View style={{width:0.9*width}}>
+                <Image source={{ uri: img }} resizeMode="contain" style={{ width: '100%',height:400, borderRadius: 10 }} />
+            </View>
         </Body>
     );
 }

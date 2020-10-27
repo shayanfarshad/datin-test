@@ -12,12 +12,12 @@ import { Provider } from 'react-redux';
 import store from '../store/store';
 import { Root } from "native-base";
 import {
-  StyleSheet,
+  StyleSheet, useColorScheme,
 } from 'react-native';
 
-import { NavigationContainer, CommonActions } from '@react-navigation/native';
+import { NavigationContainer, CommonActions, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
+import { ColorSchemeProvider, useColorSchemeContext } from 'react-native-dynamic'
 // import SplashScreen from '../screens/Splash';
 import Home from '../screens/Home';
 import Detail from '../screens/Detail';
@@ -38,18 +38,32 @@ const Stack = createStackNavigator();
 
 
 const App = () => {
+  const scheme = useColorSchemeContext()
+  const dark = {
+    dark: true,
+    colors: {
+      primary: '#ffffff',
+      background: '#242625',
+      card: '#ffffff',
+      text: '#ffffff',
+      border: 'white',
+      notification: 'white'
+    }
+  }
   return (
     <Root>
-      <Provider store={store}>
-        <NavigationContainer ref={navigationRef} >
-          <Stack.Navigator screenOptions={{
-            headerShown: false,
-          }}>
-            <Stack.Screen name="home" component={Home} />
-            <Stack.Screen name="detail" component={Detail} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </Provider>
+      <ColorSchemeProvider mode={scheme} >
+        <Provider store={store}>
+          <NavigationContainer ref={navigationRef} theme={scheme === 'dark' ? dark : DefaultTheme} >
+            <Stack.Navigator screenOptions={{
+              headerShown: false,
+            }}>
+              <Stack.Screen name="home" component={Home} />
+              <Stack.Screen name="detail" component={Detail} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </Provider>
+      </ColorSchemeProvider>
     </Root>
   );
 };
