@@ -6,22 +6,24 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import 'react-native-gesture-handler';
 import { Provider } from 'react-redux';
 import store from '../store/store';
 import { Root } from "native-base";
 import {
+  Appearance,
+  EventEmitter,
   StyleSheet, useColorScheme,
 } from 'react-native';
 
 import { NavigationContainer, CommonActions, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { ColorSchemeProvider, useColorSchemeContext } from 'react-native-dynamic'
+import { ColorSchemeProvider, DarkModeProvider, useColorSchemeContext } from 'react-native-dynamic'
 // import SplashScreen from '../screens/Splash';
 import Home from '../screens/Home';
 import Detail from '../screens/Detail';
-
+import { AppearanceProvider } from 'react-native-appearance';
 
 const Stack = createStackNavigator();
 // const config = {
@@ -37,8 +39,10 @@ const Stack = createStackNavigator();
 // };
 
 
-const App = () => {
-  const scheme = useColorSchemeContext()
+function App({ navigation }) {
+  const scheme = useColorScheme()
+  const [isDarkMode, setDarkMode] = useState();
+  const [isFocus, setFocus] = useState();
   const dark = {
     dark: true,
     colors: {
@@ -50,10 +54,21 @@ const App = () => {
       notification: 'white'
     }
   }
+  // useEffect(() => {
+  //     if (scheme === 'dark') {
+  //       Appearance.addChangeListener(scheme)
+  //     } else {
+  //       setDarkMode(false)
+  //     }
+  //     setFocus(true)
+
+  // }, [scheme]);
+
+
   return (
     <Root>
-      <ColorSchemeProvider mode={scheme} >
-        <Provider store={store}>
+      <Provider store={store}>
+        <AppearanceProvider>
           <NavigationContainer ref={navigationRef} theme={scheme === 'dark' ? dark : DefaultTheme} >
             <Stack.Navigator screenOptions={{
               headerShown: false,
@@ -62,8 +77,8 @@ const App = () => {
               <Stack.Screen name="detail" component={Detail} />
             </Stack.Navigator>
           </NavigationContainer>
-        </Provider>
-      </ColorSchemeProvider>
+        </AppearanceProvider>
+      </Provider>
     </Root>
   );
 };
